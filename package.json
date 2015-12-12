@@ -1,7 +1,7 @@
 {
   "name": "web-car-radio",
   "description": "a voice controlled youtube music player in the browser, ideal for hands-free environments",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "repository": {
     "url": "git://github.com/noffle/web-car-radio.git"
   },
