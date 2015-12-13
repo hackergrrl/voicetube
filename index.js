@@ -28,6 +28,7 @@ function getAudioStreamFromUrl (req, res, params) {
     })
     if (targetUrl) {
       console.error('found lowest bitrate audio')
+      console.error(targetUrl)
       request.get(targetUrl).pipe(res)
     } else {
       res.statusCode = 404
