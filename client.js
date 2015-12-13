@@ -1,6 +1,7 @@
 var search = require('youtube-search')
 var ytdl = require('ytdl-core')
 var ytApiKey = require('./yt_api_key')
+var request = require('browser-request')
 
 var log = function (txt) {
   var stdout = document.getElementById('stdout')
@@ -42,10 +43,15 @@ function startListening() {
             var link = videos[0].link
             var encodedUrl = encodeURIComponent(link)
 
-            var audio = document.getElementById('playback')
-            audio.src = '/audio/' + encodedUrl
-
-            document.getElementById('stop').disabled = false
+            request.get('/audio/' + encodedUrl, function (err, res, body) {
+              if (err) {
+                console.error(err)
+                return
+              }
+              var audio = document.getElementById('playback')
+              audio.src = body
+              document.getElementById('stop').disabled = false
+            })
           }
         })
       }
