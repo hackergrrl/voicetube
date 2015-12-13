@@ -1,57 +1,46 @@
-var search = require('youtube-search')
+var http = require('http')
+var https = require('https')
+var ecstatic = require('ecstatic')(__dirname)
 var ytdl = require('ytdl-core')
-var ytApiKey = require('./yt_api_key')
+var request = require('request')
 
-var log = function (txt) {
-  var stdout = document.getElementById('stdout')
-  stdout.innerHTML += txt + '\n'
+var router = require('routes')()
+router.addRoute('/audio/:url', getAudioStreamFromUrl)
 
-  console.log(txt)
-}
-if (!('webkitSpeechRecognition' in window)) {
-  log('no speech api support')
-} else {
-  log('begin')
-  var recognition = new webkitSpeechRecognition()
-  recognition.continuous = true
-  recognition.interimResults = true
-
-  recognition.onstart = function () {
-    log('start')
-  }
-  recognition.onresult = function (event) {
-    var result = event.results[event.results.length - 1]
-    if (result.isFinal) {
-      var alt = result[result.length - 1]
-      // console.log(alt)
-      result = alt.transcript.trim()
-      log(result)
-      search(result, {maxResults: 3, key: ytApiKey}, function (err, videos) {
-        if (err) {
-          console.error(err)
-        } else {
-          videos = videos.filter(function (video) {
-            return (video.kind === 'youtube#video')
-          })
-          var link = videos[0].link
-          ytdl.getInfo(link, {}, function (err, info) {
-            console.log(err)
-            console.dir(info)
-          })
-        }
-      })
+function getAudioStreamFromUrl (req, res, params) {
+  console.error('requesting info for', params.url)
+  ytdl.getInfo(params.url, function (err, info) {
+    if (err) {
+      res.statusCode = 500
+      res.end(err)
+      return
     }
-  }
-  recognition.onerror = function (err) {
-    log('err')
-    log(err.toString())
-    console.error(err)
-  }
-  recognition.onend = function () {
-    log('end')
-  }
-
-  recognition.lang = 'en-US'
-  // recognition.lang = 'de'
-  recognition.start()
+    console.error('got info')
+    var lowestBitrate = 100000000
+    var targetUrl = null
+    info.formats.forEach(function(format) {
+      if (/audio/.test(format.type)) {
+        if (format.audioBitrate < lowestBitrate) {
+          lowestBitrate = format.audioBitrate
+          targetUrl = format.url
+        }
+      }
+    })
+    if (targetUrl) {
+      console.error('found lowest bitrate audio')
+      request.get(targetUrl).pipe(res)
+    } else {
+      res.statusCode = 404
+      res.end()
+    }
+  })
 }
+
+http.createServer(function (req, res) {
+  var route = router.match(req.url)
+  if (route) {
+    route.fn(req, res, route.params)
+  } else {
+    ecstatic(req, res)
+  }
+}).listen(4000)
