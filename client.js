@@ -17,43 +17,60 @@ function startListening() {
     log('begin')
 
     document.getElementById('listen').disabled = true
+
+    var done = false
       
     var recognition = new webkitSpeechRecognition()
     recognition.continuous = true
-    recognition.interimResults = true 
+    recognition.interimResults = false
     recognition.onstart = function () {
       log('start')
     }
     recognition.onresult = function (event) {
-      var result = event.results[event.results.length - 1]
-      if (result.isFinal) {
-        recognition.stop()
-        var alt = result[result.length - 1]
-        // console.log(alt)
-        result = alt.transcript.trim()
-        log(result)
-        search(result, {maxResults: 3, key: ytApiKey}, function (err, videos) {
-          if (err) {
-            console.error(err)
-          } else {
-            videos = videos.filter(function (video) {
-              return (video.kind === 'youtube#video')
-            })
+      if (done) {
+        return
+      }
+      // console.log(event)
+      // log(event.results.length)
+      // log(event.toString())
+      for (var i = event.resultIndex; i < event.results.length; i++) {
+        var result = event.results[i]
+        if (result.isFinal) {
+          recognition.stop()
+          done = true
+          var alt = result[0]
+          // console.log(alt)
+          result = alt.transcript.trim()
+          log(result)
+          search(result, {maxResults: 3, key: ytApiKey}, function (err, videos) {
+            if (err) {
+              console.error(err)
+            } else {
+              videos = videos.filter(function (video) {
+                return (video.kind === 'youtube#video')
+              })
 
-            var link = videos[0].link
-            var encodedUrl = encodeURIComponent(link)
+              var link = videos[0].link
+              var encodedUrl = encodeURIComponent(link)
 
-            request.get('/audio/' + encodedUrl, function (err, res, body) {
-              if (err) {
-                console.error(err)
-                return
-              }
-              var audio = document.getElementById('playback')
-              audio.src = body
-              document.getElementById('stop').disabled = false
-            })
-          }
-        })
+              request.get('/audio/' + encodedUrl, function (err, res, body) {
+                if (err) {
+                  console.error(err)
+                  return
+                }
+                var audio = document.getElementById('playback')
+                audio.src = body
+
+                // TODO: do we actually need this?
+                setTimeout(function() {
+                  audio.play()
+                }, 3000)
+
+                document.getElementById('stop').disabled = false
+              })
+            }
+          })
+        }
       }
     }
     recognition.onerror = function (err) {
