@@ -11,16 +11,27 @@ var log = function (txt) {
   console.log(txt)
 }
 
+function showIcon(name) {
+  document.getElementById('icon_listen').style.display = 'none'
+  document.getElementById('icon_pause').style.display = 'none'
+  document.getElementById('icon_play').style.display = 'none'
+  document.getElementById('icon_stop').style.display = 'none'
+  document.getElementById('icon_listening').style.display = 'none'
+  document.getElementById('icon_listen').style.display = 'none'
+  document.getElementById('icon_working').style.display = 'none'
+
+  document.getElementById('icon_' + name).style.display = 'inline-block'
+
+  return document.getElementById('icon_' + name)
+}
+
 function startListening() {
   if (!('webkitSpeechRecognition' in window)) {
     log('no speech api support')
   } else {
     log('begin')
-
-    document.getElementById('listen').disabled = true
-
+    showIcon('listening')
     var done = false
-      
     var recognition = new webkitSpeechRecognition()
     recognition.continuous = true
     recognition.interimResults = false
@@ -38,6 +49,7 @@ function startListening() {
         var result = event.results[i]
         if (result.isFinal) {
           recognition.stop()
+          showIcon('working')
           done = true
           var alt = result[0]
           // console.log(alt)
@@ -67,9 +79,8 @@ function startListening() {
                 // TODO: do we actually need this?
                 setTimeout(function() {
                   audio.play()
+                  showIcon('stop')
                 }, 3000)
-
-                document.getElementById('stop').disabled = false
               })
             }
           })
@@ -80,6 +91,7 @@ function startListening() {
       log('err')
       log(err.toString())
       console.error(err)
+      showIcon('listen')
     }
     recognition.onend = function () {
       log('end')
@@ -95,15 +107,12 @@ function endPlayback() {
   var playback = document.getElementById('playback')
   playback.pause()
   playback.currentTime = 0
-  document.getElementById('listen').disabled = false
-  document.getElementById('stop').disabled = true
+  showIcon('listen')
 }
 
 
 window.onload = function () {
-  var listen = document.getElementById('listen')
-  listen.onclick = startListening
-
-  var stop = document.getElementById('stop')
-  stop.onclick = endPlayback
+  showIcon('listen')
+  document.getElementById('icon_stop').onclick = endPlayback
+  document.getElementById('icon_listen').onclick = startListening
 }

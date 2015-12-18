@@ -6,12 +6,19 @@
     <div>
       <textarea id="stdout" rows="10" cols="50" value="WELCOME HUMAN" readonly="true"></textarea>
     </div>
-    <div>
-      <audio id="playback" controls="true" autoplay="true"></audio>
-    </div>
-    <div>
-      <button id="listen">Listen</button>
-      <button id="stop" disabled="true">Stop</button>
-    </div>
+    <center>
+      <div>
+          <img id="icon_pause" src="/icon_pause.png" style="display: none"/>
+          <img id="icon_play" src="/icon_play.png" style="display: none"/>
+          <img id="icon_stop" src="/icon_stop.png" style="display: none"/>
+          <img id="icon_working" src="/icon_working.png" style="display: none"/>
+          <img id="icon_listening" src="/icon_listening.png" style="display: none"/>
+          <img id="icon_listen" src="/icon_listen.png"/>
+      </div>
+      <div>
+        <b><h2 id="title">A SONG</h2></b>
+        <audio id="playback" controls="true" autoplay="true"></audio>
+      </div>
+    </center>
   </body>
 </html>
