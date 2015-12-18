@@ -4,9 +4,13 @@ plays!
 
 Web powered, built for mobile devices.
 
-[**live demo on eight45**](https://eight45.net:4000)
-
+<center>
 ![](https://noffle.github.com/screenshots/voicetube.png)
+</center>
+
+<center>
+[**Live demo on eight45**](https://eight45.net:4000)
+</center>
 
 
 ## Caveats
