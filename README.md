@@ -15,7 +15,8 @@ Web powered, built for mobile devices.
 
 ## Caveats
 
-### Chrome Only
+### Desktop: Chrome, Opera
+### Mobile: Chrome
 
 Only works on Chrome [at the
 moment](http://caniuse.com/#feat=speech-recognition) across desktop, Android,
