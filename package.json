@@ -7,8 +7,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "standard",
-    "build": "browserify client.js > bundle.js"
+    "build": "browserify client.js > bundle.js",
+    "test": "standard"
   },
   "dependencies": {
     "browser-request": "^0.3.3",
@@ -16,6 +16,9 @@
     "request": "^2.67.0",
     "routes": "^2.1.0",
     "youtube-search": "^1.0.4",
-    "ytdl-core": "^0.7.8"
+    "ytdl-core": "^0.7.9"
+  },
+  "devDependencies": {
+    "browserify": "^12.0.1"
   }
 }
