@@ -4,6 +4,8 @@ var request = require('browser-request')
 
 var ytApiKey = require('./yt_api_key')
 
+var firstLoad = true
+
 var log = function (txt) {
   var stdout = document.getElementById('stdout')
   if (stdout) {
@@ -28,8 +30,11 @@ function showIcon(name) {
 }
 
 function startListening() {
-  var audio = document.getElementById('playback')
-  audio.load()
+  if (firstLoad) {
+    var audio = document.getElementById('playback')
+    audio.load()
+    firstLoad = false
+  }
 
   if (!('webkitSpeechRecognition' in window)) {
     log('no speech api support')
