@@ -12,7 +12,8 @@ function getAudioStreamFromUrl (req, res, params) {
   ytdl.getInfo(params.url, function (err, info) {
     if (err) {
       res.statusCode = 500
-      res.end(err)
+      res.end(err.toString())
+      console.log(err.toString())
       return
     }
     console.error('got info')
@@ -43,14 +44,15 @@ var options = {
 }
 
 https.createServer(options, function (req, res) {
+  console.log(req.url, 'STARTED')
+  res.on('finish', function() {
+    console.log(req.url, 'DONE  ' + res.statusCode)
+  })
+
   var route = router.match(req.url)
   if (route) {
     route.fn(req, res, route.params)
   } else {
     ecstatic(req, res)
-    console.log(req.url, 'STARTED')
-    res.on('finish', function() {
-      console.log(req.url, 'DONE')
-    })
   }
 }).listen(4000)
