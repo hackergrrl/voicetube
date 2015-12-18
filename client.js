@@ -1,7 +1,8 @@
 var search = require('youtube-search')
 var ytdl = require('ytdl-core')
-var ytApiKey = require('./yt_api_key')
 var request = require('browser-request')
+
+var ytApiKey = require('./yt_api_key')
 
 var log = function (txt) {
   var stdout = document.getElementById('stdout')
@@ -96,8 +97,11 @@ function endPlayback() {
   document.getElementById('stop').disabled = true
 }
 
-var listen = document.getElementById('listen')
-listen.onclick = startListening
 
-var stop = document.getElementById('stop')
-stop.onclick = endPlayback
+window.onload = function () {
+  var listen = document.getElementById('listen')
+  listen.onclick = startListening
+
+  var stop = document.getElementById('stop')
+  stop.onclick = endPlayback
+}
