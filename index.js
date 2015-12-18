@@ -42,5 +42,9 @@ http.createServer(function (req, res) {
     route.fn(req, res, route.params)
   } else {
     ecstatic(req, res)
+    console.log(req.url, 'STARTED')
+    res.on('finish', function() {
+      console.log(req.url, 'DONE')
+    })
   }
 }).listen(4000)
