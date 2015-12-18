@@ -19,7 +19,7 @@ Web powered, built for mobile devices.
 
 Only works on Chrome [at the
 moment](http://caniuse.com/#feat=speech-recognition) across desktop, Android,
-and iOS.
+and iOS, and Opera on desktop.
 
 ### HTTPS
 
