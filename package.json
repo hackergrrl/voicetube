@@ -1,9 +1,9 @@
 {
-  "name": "web-car-radio",
+  "name": "voicetube",
   "description": "a voice controlled youtube music player in the browser, ideal for hands-free environments",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": {
-    "url": "git://github.com/noffle/web-car-radio.git"
+    "url": "git://github.com/noffle/voicetube.git"
   },
   "main": "index.js",
   "scripts": {
@@ -20,5 +20,12 @@
   },
   "devDependencies": {
     "browserify": "^12.0.1"
-  }
+  },
+  "keywords": [
+    "voice",
+    "youtube",
+    "speech",
+    "music",
+    "audio"
+  ]
 }
