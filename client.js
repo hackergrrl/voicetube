@@ -28,6 +28,9 @@ function showIcon(name) {
 }
 
 function startListening() {
+  var audio = document.getElementById('playback')
+  audio.load()
+
   if (!('webkitSpeechRecognition' in window)) {
     log('no speech api support')
   } else {
