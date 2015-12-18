@@ -32,13 +32,14 @@ function startListening() {
     log('no speech api support')
   } else {
     log('begin')
-    showIcon('listening')
+    showIcon('working')
     var done = false
     var recognition = new webkitSpeechRecognition()
     recognition.continuous = true
     recognition.interimResults = false
     recognition.onstart = function () {
       log('start')
+      showIcon('listening')
     }
     recognition.onresult = function (event) {
       if (done) {
@@ -68,6 +69,8 @@ function startListening() {
               var link = videos[0].link
               var encodedUrl = encodeURIComponent(link)
 
+              document.getElementById('title').innerHTML = videos[0].title
+
               request.get('/audio/' + encodedUrl, function (err, res, body) {
                 if (err) {
                   console.error(err)
@@ -77,11 +80,11 @@ function startListening() {
                 audio.src = body
 
                 audio.addEventListener('ended', endPlayback)
+                audio.addEventListener('playing', function () { showIcon('stop') })
 
                 // TODO: do we actually need this?
                 setTimeout(function() {
                   audio.play()
-                  showIcon('stop')
                 }, 3000)
               })
             }
