@@ -6,7 +6,9 @@ var ytApiKey = require('./yt_api_key')
 
 var log = function (txt) {
   var stdout = document.getElementById('stdout')
-  stdout.innerHTML += txt + '\n'
+  if (stdout) {
+    stdout.innerHTML += txt + '\n'
+  }
 
   console.log(txt)
 }
