@@ -62,6 +62,8 @@ function startListening() {
                 var audio = document.getElementById('playback')
                 audio.src = body
 
+                audio.addEventListener('ended', endPlayback)
+
                 // TODO: do we actually need this?
                 setTimeout(function() {
                   audio.play()
