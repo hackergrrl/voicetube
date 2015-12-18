@@ -17,8 +17,9 @@ Web powered, built for mobile devices.
 
 ### Chrome Only
 
-Only works on Chrome [at the moment](https://caniuse/...) across desktop,
-Android, and iOS.
+Only works on Chrome [at the
+moment](http://caniuse.com/#feat=speech-recognition) across desktop, Android,
+and iOS.
 
 ### HTTPS
 
