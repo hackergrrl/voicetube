@@ -92,26 +92,18 @@ function startListening() {
 
               showInfo('downloading')
 
-              request.get('/audio/' + encodedUrl, function (err, res, body) {
-                if (err) {
-                  console.error(err)
-                  showIcon('error')
-                  showInfo('YouTube error: ' + err)
-                  return
-                }
-                showInfo('preparing to play')
-                var audio = document.getElementById('playback')
-                audio.src = body
+              showInfo('preparing to play')
+              var audio = document.getElementById('playback')
+              audio.src = '/audio/' + encodedUrl
 
-                audio.addEventListener('ended', endPlayback)
-                audio.addEventListener('playing', function () { showIcon('stop') })
+              audio.addEventListener('ended', endPlayback)
+              audio.addEventListener('playing', function () { showIcon('stop') })
 
-                // TODO: do we actually need this?
-                setTimeout(function() {
-                  audio.play()
-                  showInfo('')
-                }, 3000)
-              })
+              // TODO: do we actually need this?
+              setTimeout(function() {
+                audio.play()
+                showInfo('')
+              }, 3000)
             }
           })
         }
