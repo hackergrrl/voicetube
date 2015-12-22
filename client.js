@@ -15,6 +15,10 @@ var log = function (txt) {
   console.log(txt)
 }
 
+function showInfo(info) {
+  document.getElementById('info').innerHTML = info
+}
+
 function showIcon(name) {
   document.getElementById('icon_listen').style.display = 'none'
   document.getElementById('icon_pause').style.display = 'none'
@@ -23,6 +27,7 @@ function showIcon(name) {
   document.getElementById('icon_listening').style.display = 'none'
   document.getElementById('icon_listen').style.display = 'none'
   document.getElementById('icon_working').style.display = 'none'
+  document.getElementById('icon_error').style.display = 'none'
 
   document.getElementById('icon_' + name).style.display = 'inline-block'
 
@@ -41,6 +46,7 @@ function startListening() {
   } else {
     log('begin')
     showIcon('working')
+    showInfo('')
     var done = false
     var recognition = new webkitSpeechRecognition()
     recognition.continuous = true
@@ -53,6 +59,7 @@ function startListening() {
       if (done) {
         return
       }
+      showInfo('processing speech')
       // console.log(event)
       // log(event.results.length)
       // log(event.toString())
@@ -69,7 +76,11 @@ function startListening() {
           search(result, {maxResults: 3, key: ytApiKey}, function (err, videos) {
             if (err) {
               console.error(err)
+              showIcon('error')
+              showInfo('YouTube error: ' + err)
             } else {
+              showInfo('')
+
               videos = videos.filter(function (video) {
                 return (video.kind === 'youtube#video')
               })
@@ -79,11 +90,16 @@ function startListening() {
 
               document.getElementById('title').innerHTML = videos[0].title
 
+              showInfo('downloading')
+
               request.get('/audio/' + encodedUrl, function (err, res, body) {
                 if (err) {
                   console.error(err)
+                  showIcon('error')
+                  showInfo('YouTube error: ' + err)
                   return
                 }
+                showInfo('preparing to play')
                 var audio = document.getElementById('playback')
                 audio.src = body
 
@@ -93,6 +109,7 @@ function startListening() {
                 // TODO: do we actually need this?
                 setTimeout(function() {
                   audio.play()
+                  showInfo('')
                 }, 3000)
               })
             }
