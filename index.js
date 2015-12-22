@@ -13,7 +13,7 @@ function getAudioStreamFromUrl (req, res, params) {
     if (err) {
       res.statusCode = 500
       res.end(err.toString())
-      console.log(err.toString())
+      console.error(err.toString())
       return
     }
     console.error('got info')
@@ -29,6 +29,7 @@ function getAudioStreamFromUrl (req, res, params) {
     })
     if (targetUrl) {
       console.error('found lowest bitrate audio')
+      console.error(targetUrl)
       res.end(targetUrl)
     } else {
       res.statusCode = 404
@@ -44,9 +45,9 @@ var options = {
 }
 
 https.createServer(options, function (req, res) {
-  console.log(req.url, 'STARTED')
+  console.error(req.url, 'STARTED')
   res.on('finish', function() {
-    console.log(req.url, 'DONE  ' + res.statusCode)
+    console.error(req.url, 'DONE  ' + res.statusCode)
   })
 
   var route = router.match(req.url)
