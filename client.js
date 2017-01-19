@@ -1,5 +1,4 @@
 var search = require('youtube-search')
-var ytdl = require('ytdl-core')
 var request = require('browser-request')
 
 var ytApiKey = require('./yt_api_key')
@@ -73,7 +72,8 @@ function startListening() {
           // console.log(alt)
           result = alt.transcript.trim()
           log(result)
-          search(result, {maxResults: 3, key: ytApiKey}, function (err, videos) {
+
+          videoSearch(result, function (err, title, link) {
             if (err) {
               console.error(err)
               showIcon('error')
@@ -81,23 +81,17 @@ function startListening() {
             } else {
               showInfo('')
 
-              videos = videos.filter(function (video) {
-                return (video.kind === 'youtube#video')
-              })
-
-              var link = videos[0].link
-              var encodedUrl = encodeURIComponent(link)
-
-              document.getElementById('title').innerHTML = videos[0].title
+              document.getElementById('title').innerHTML = title
 
               showInfo('downloading')
 
               showInfo('preparing to play')
-              var audio = document.getElementById('playback')
-              audio.src = '/audio/' + encodedUrl
 
-              audio.addEventListener('ended', endPlayback)
-              audio.addEventListener('playing', function () { showIcon('stop') })
+              playUrlAudio(link, function onPlay () {
+                showIcon('stop')
+              }, function onEnd () {
+                endPlayback()
+              })
 
               // TODO: do we actually need this?
               setTimeout(function() {
@@ -137,4 +131,27 @@ window.onload = function () {
   showIcon('listen')
   document.getElementById('icon_stop').onclick = endPlayback
   document.getElementById('icon_listen').onclick = startListening
+}
+
+function videoSearch (text, done) {
+  search(text, {maxResults: 3, key: ytApiKey}, function (err, videos) {
+    if (err) return done(err)
+
+    videos = videos.filter(function (video) {
+      return (video.kind === 'youtube#video')
+    })
+
+    var link = videos[0].link
+
+    done(null, title, link)
+  })
+}
+
+function playUrlAudio (url, onPlay, onEnd) {
+  var encodedUrl = encodeURIComponent(url)
+  var audio = document.getElementById('playback')
+  audio.src = '/audio/' + encodedUrl
+
+  audio.addEventListener('ended', onEnd)
+  audio.addEventListener('playing', onPlay)
 }
