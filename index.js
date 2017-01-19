@@ -1,5 +1,6 @@
 var fs = require('fs')
 var https = require('https')
+var http = require('http')
 var ecstatic = require('ecstatic')(__dirname)
 var ytdl = require('ytdl-core')
 var request = require('request')
@@ -14,11 +15,11 @@ function getAudioStreamFromUrl (req, res, params) {
 
 // https server options
 var options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('cert.pem')
+  // key: fs.readFileSync('key.pem'),
+  // cert: fs.readFileSync('cert.pem')
 }
 
-https.createServer(options, function (req, res) {
+http.createServer(function (req, res) {
   console.error(req.url, 'STARTED')
   res.on('finish', function() {
     console.error(req.url, 'DONE  ' + res.statusCode)
