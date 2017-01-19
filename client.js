@@ -40,6 +40,8 @@ function startListening() {
     firstLoad = false
   }
 
+  var state = 'pre'
+
   if (!('webkitSpeechRecognition' in window)) {
     log('no speech api support')
   } else {
@@ -58,6 +60,7 @@ function startListening() {
       if (done) {
         return
       }
+      state = 'working'
       showInfo('processing speech')
       // console.log(event)
       // log(event.results.length)
@@ -110,6 +113,9 @@ function startListening() {
       showIcon('listen')
     }
     recognition.onend = function () {
+      if (state !== 'working') {
+        endPlayback()
+      }
       log('end')
     }
 
