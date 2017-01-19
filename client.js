@@ -141,9 +141,7 @@ function videoSearch (text, done) {
       return (video.kind === 'youtube#video')
     })
 
-    var link = videos[0].link
-
-    done(null, title, link)
+    done(null, videos[0].title, videos[0].link)
   })
 }
 
